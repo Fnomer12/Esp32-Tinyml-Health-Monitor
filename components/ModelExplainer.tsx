@@ -1,0 +1,243 @@
+"use client";
+
+
+
+import chartData from "@/data/chart-data.json";
+import { BarChart, GroupedBarChart, ConfusionMatrix, DecisionTreeDiagram, Histogram, STATUS_COLORS, MODEL_COLORS } from "./charts/VizCharts";
+
+const ALL_MODEL_NAMES = ["Decision Tree", "Random Forest", "Neural Network", "XGBoost", "Transformer"];
+
+const dtClean = chartData.scorecards.find((s) => s.dataset === "clean" && s.model === "Decision Tree")!;
+const dtNoisy = chartData.scorecards.find((s) => s.dataset === "noisy" && s.model === "Decision Tree")!;
+const dtKb = chartData.modelSize.find((m) => m.model === "Decision Tree")!.kb;
+const rfKb = chartData.modelSize.find((m) => m.model === "Random Forest")!.kb;
+
+const totalRows = chartData.totalRows;
+const normalPct = Math.round((chartData.classCounts[0].count / totalRows) * 1000) / 10;
+const sortedFI = chartData.featureImportance.slice().sort((a, b) => b.value - a.value);
+const topFeature = sortedFI[0];
+const secondFeature = sortedFI[1];
+const criticalRecall = chartData.perClassRecallNoisy.find((r) => r.name === "Critical")!;
+
+const HIST_META: { key: keyof typeof chartData.histograms; label: string; unit: string }[] = [
+  { key: "HR", label: "Heart rate", unit: " bpm" },
+  { key: "RR", label: "Respiratory rate", unit: " br/min" },
+  { key: "SpO2", label: "SpO2", unit: "%" },
+  { key: "Temperature_C", label: "Temperature", unit: "°C" },
+];
+
+const SECTIONS = [
+  { id: "c11", title: "Where the data came from" },
+  { id: "c12", title: "Class distribution" },
+  { id: "c13", title: "What each vital looks like" },
+  { id: "c14", title: "The decision tree it learned" },
+  { id: "c15", title: "Confusion matrix" },
+  { id: "c16", title: "Per-class recall" },
+  { id: "c17", title: "Feature importance" },
+  { id: "c18", title: "All five models" },
+  { id: "c18b", title: "MCC score" },
+  { id: "c19", title: "Model size" },
+  { id: "c20", title: "Bottom line" },
+];
+
+export default function ModelExplainer() {
+  return (
+    <>
+      <div className="topbar">
+        <div className="topbar-inner">
+          <div className="brand">
+            ESP32 HEALTH MONITOR &middot; <b>CATEGORY 1 &mdash; CARDIAC TRIAGE, REAL DATA</b>
+          </div>
+        </div>
+      </div>
+
+      <div className="wrap">
+        <div className="hero">
+          <div className="eyebrow">Real cardiac/ED data, four vitals, official NEWS2 bands</div>
+          <h1>Category 1: cardiac triage data, trained alone</h1>
+          <p className="lede">
+            {totalRows.toLocaleString()} real patient readings. Respiratory rate is a real measurement, not a
+            guess. All four vitals are scored using the official NEWS2 chart, not a made-up rule.
+          </p>
+        </div>
+
+        <div className="layout">
+          <nav className="side">
+            <div className="side-title">Charts</div>
+            <ul className="navlist">
+              {SECTIONS.map((g, i) => (
+                <li key={g.id}>
+                  <a href={`#${g.id}`}>
+                    <span className="num">{String(i + 1).padStart(2, "0")}</span>
+                    {g.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="sections">
+            <section className="card" id="c11">
+              <h2>One real dataset, on its own</h2>
+              <p className="simple-explain">
+                {chartData.sourceNote} {totalRows.toLocaleString()} rows, nothing made up, nothing borrowed
+                from the other datasets. This page trains on this data alone, so it can be compared fairly to
+                Category 2, Category 3, and Comparison.
+              </p>
+            </section>
+
+            <section className="card" id="c12">
+              <h2>Class distribution</h2>
+              <div className="chart-frame">
+                <BarChart data={chartData.classCounts.map((c) => ({ label: c.name, value: c.count, color: STATUS_COLORS[c.name] }))} />
+              </div>
+              <p className="simple-explain">
+                {normalPct}% of readings are Normal. This is a triage dataset, so it naturally has more sick
+                patients than a general population would.
+              </p>
+            </section>
+
+            <section className="card" id="c13">
+              <h2>What each vital looks like</h2>
+              {HIST_META.map((h) => (
+                <div key={h.key} className="chart-frame" style={{ marginBottom: 18 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>{h.label}</div>
+                  <Histogram
+                    binEdges={chartData.histograms[h.key].binEdges}
+                    counts={chartData.histograms[h.key].counts}
+                    classNames={chartData.classNames}
+                    unit={h.unit}
+                  />
+                </div>
+              ))}
+              <p className="simple-explain">
+                Where the colors overlap, one vital alone can&apos;t tell the classes apart. That&apos;s fine
+                &mdash; the model uses all four together.
+              </p>
+            </section>
+
+            <section className="card" id="c14">
+              <h2>The decision tree it learned</h2>
+              <div className="chart-frame">
+                <DecisionTreeDiagram tree={chartData.decisionTree as any} classNames={chartData.classNames} maxDepth={3} />
+              </div>
+              <p className="simple-explain">
+                Its first question is about <b>{chartData.decisionTree.feature}</b>. On this dataset,{" "}
+                {topFeature.feature.toLowerCase()} matters most, ahead of {secondFeature.feature.toLowerCase()}.
+              </p>
+            </section>
+
+            <section className="card" id="c15">
+              <h2>Confusion matrix</h2>
+              <div className="chart-frame">
+                <ConfusionMatrix matrix={chartData.confusionMatrixNoisy} classNames={chartData.classNames} />
+              </div>
+              <p className="simple-explain">
+                Rows are the real answer, columns are the guess. Most mistakes are between neighboring
+                severity levels &mdash; the safer kind of mistake.
+              </p>
+            </section>
+
+            <section className="card" id="c16">
+              <h2>Per-class recall</h2>
+              <div className="chart-frame">
+                <BarChart
+                  data={chartData.perClassRecallNoisy.map((r) => ({ label: r.name, value: r.recall, color: STATUS_COLORS[r.name] }))}
+                  valueSuffix="%"
+                />
+              </div>
+              <p className="simple-explain">
+                Critical cases are caught {criticalRecall.recall}% of the time, even with simulated sensor
+                noise. That&apos;s the class that matters most.
+              </p>
+            </section>
+
+            <section className="card" id="c17">
+              <h2>Feature importance</h2>
+              <div className="chart-frame">
+                <BarChart
+                  data={chartData.featureImportance.map((f) => ({
+                    label: f.feature,
+                    value: Math.round(f.value * 1000) / 10,
+                    color: f.feature === topFeature.feature ? "#e87ba4" : MODEL_COLORS["Decision Tree"],
+                  }))}
+                  valueSuffix="%"
+                />
+              </div>
+              <p className="simple-explain">
+                <b>{topFeature.feature}</b> matters most here, at {Math.round(topFeature.value * 100)}%.{" "}
+                {secondFeature.feature} is second, at {Math.round(secondFeature.value * 100)}%. This order is
+                different on other pages &mdash; it depends on the dataset.
+              </p>
+            </section>
+
+            <section className="card" id="c18">
+              <h2>All five models</h2>
+              <div className="chart-frame">
+                <GroupedBarChart
+                  categories={ALL_MODEL_NAMES}
+                  series={["clean", "noisy"].map((d) => ({
+                    name: d === "clean" ? "Clean" : "Noisy (simulated sensor)",
+                    color: d === "clean" ? "#2a78d6" : "#e34948",
+                    values: ALL_MODEL_NAMES.map((m) => chartData.scorecards.find((s) => s.model === m && s.dataset === d)!.accuracy),
+                  }))}
+                  valueSuffix="%"
+                />
+              </div>
+              <p className="simple-explain">
+                Clean data looks almost perfect ({dtClean.accuracy}% for Decision Tree) because the labels come
+                straight from the same rules used to score them. With noise added, Decision Tree lands at{" "}
+                {dtNoisy.accuracy}%, close to the other four.
+              </p>
+            </section>
+
+            <section className="card" id="c18b">
+              <h2>MCC score</h2>
+              <div className="chart-frame">
+                <BarChart
+                  data={ALL_MODEL_NAMES.map((m) => ({
+                    label: m,
+                    value: chartData.scorecards.find((s) => s.model === m && s.dataset === "noisy")!.mcc,
+                    color: MODEL_COLORS[m],
+                  }))}
+                  decimals={3}
+                />
+              </div>
+              <p className="simple-explain">
+                MCC is a stricter accuracy check that can&apos;t be fooled by uneven class sizes. Decision Tree
+                scores {dtNoisy.mcc} under noise &mdash; close to the other four, which backs up the accuracy
+                numbers above.
+              </p>
+            </section>
+
+            <section className="card" id="c19">
+              <h2>Model size</h2>
+              <div className="chart-frame">
+                <BarChart
+                  data={ALL_MODEL_NAMES.map((m) => ({ label: m, value: chartData.modelSize.find((s) => s.model === m)!.kb, color: MODEL_COLORS[m] }))}
+                  valueSuffix=" KB"
+                  logScale
+                />
+              </div>
+              <p className="simple-explain">
+                Random Forest is {chartData.modelSizeRatio}x bigger than Decision Tree ({rfKb.toLocaleString()}{" "}
+                KB vs {dtKb} KB) for about the same accuracy. The ESP32 has limited flash, so{" "}
+                <b>Decision Tree is still the right choice</b>.
+              </p>
+            </section>
+
+            <section className="card" id="c20">
+              <h2>Bottom line</h2>
+              <p className="simple-explain">
+                On the cardiac dataset alone, <b>{topFeature.feature.toLowerCase()}</b> matters most, with{" "}
+                {secondFeature.feature.toLowerCase()} close behind. Which vital matters most changes by
+                dataset &mdash; see Category 2, Category 3 and Comparison. Decision Tree stays small ({dtKb} KB)
+                and accurate ({dtNoisy.accuracy}%) under noise.
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

@@ -1,0 +1,886 @@
+{
+  "classNames": [
+    "Normal",
+    "Warning",
+    "High",
+    "Critical"
+  ],
+  "totalRows": 5808,
+  "sourceNote": "Real cardiac/ED triage dataset -- clinician-recorded vitals, including respiratory rate.",
+  "features": [
+    "HR",
+    "RR",
+    "SpO2",
+    "Temperature_C"
+  ],
+  "featureDisplayNames": {
+    "HR": "Heart rate",
+    "RR": "Respiratory rate",
+    "SpO2": "SpO2",
+    "Temperature_C": "Temperature"
+  },
+  "classCounts": [
+    {
+      "name": "Normal",
+      "count": 2657
+    },
+    {
+      "name": "Warning",
+      "count": 761
+    },
+    {
+      "name": "High",
+      "count": 1222
+    },
+    {
+      "name": "Critical",
+      "count": 1168
+    }
+  ],
+  "confusionMatrixClean": [
+    [
+      2657,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      759,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      1206,
+      16
+    ],
+    [
+      31,
+      19,
+      11,
+      1107
+    ]
+  ],
+  "confusionMatrixNoisy": [
+    [
+      1770,
+      387,
+      465,
+      35
+    ],
+    [
+      134,
+      441,
+      140,
+      46
+    ],
+    [
+      167,
+      76,
+      735,
+      244
+    ],
+    [
+      31,
+      41,
+      137,
+      959
+    ]
+  ],
+  "perClassRecallNoisy": [
+    {
+      "name": "Normal",
+      "recall": 66.6,
+      "support": 2657
+    },
+    {
+      "name": "Warning",
+      "recall": 58.0,
+      "support": 761
+    },
+    {
+      "name": "High",
+      "recall": 60.1,
+      "support": 1222
+    },
+    {
+      "name": "Critical",
+      "recall": 82.1,
+      "support": 1168
+    }
+  ],
+  "featureImportance": [
+    {
+      "feature": "Heart rate",
+      "value": 0.2677
+    },
+    {
+      "feature": "Respiratory rate",
+      "value": 0.6612
+    },
+    {
+      "feature": "SpO2",
+      "value": 0.0701
+    },
+    {
+      "feature": "Temperature",
+      "value": 0.001
+    }
+  ],
+  "modelSizeRatio": 229.0,
+  "scorecards": [
+    {
+      "dataset": "clean",
+      "model": "Decision Tree",
+      "accuracy": 98.6,
+      "precision": 98.5,
+      "recall": 98.3,
+      "f1": 98.4,
+      "mcc": 0.98
+    },
+    {
+      "dataset": "noisy",
+      "model": "Decision Tree",
+      "accuracy": 67.2,
+      "precision": 63.9,
+      "recall": 66.7,
+      "f1": 64.7,
+      "mcc": 0.547
+    },
+    {
+      "dataset": "clean",
+      "model": "Random Forest",
+      "accuracy": 99.8,
+      "precision": 99.7,
+      "recall": 99.7,
+      "f1": 99.7,
+      "mcc": 0.997
+    },
+    {
+      "dataset": "noisy",
+      "model": "Random Forest",
+      "accuracy": 69.1,
+      "precision": 65.9,
+      "recall": 68.6,
+      "f1": 66.6,
+      "mcc": 0.574
+    },
+    {
+      "dataset": "clean",
+      "model": "Neural Network",
+      "accuracy": 99.2,
+      "precision": 98.9,
+      "recall": 99.1,
+      "f1": 99.0,
+      "mcc": 0.989
+    },
+    {
+      "dataset": "noisy",
+      "model": "Neural Network",
+      "accuracy": 66.3,
+      "precision": 63.1,
+      "recall": 66.5,
+      "f1": 63.9,
+      "mcc": 0.541
+    },
+    {
+      "dataset": "clean",
+      "model": "XGBoost",
+      "accuracy": 99.9,
+      "precision": 99.9,
+      "recall": 99.9,
+      "f1": 99.9,
+      "mcc": 0.999
+    },
+    {
+      "dataset": "noisy",
+      "model": "XGBoost",
+      "accuracy": 67.6,
+      "precision": 64.5,
+      "recall": 67.8,
+      "f1": 65.2,
+      "mcc": 0.559
+    },
+    {
+      "dataset": "clean",
+      "model": "Transformer",
+      "accuracy": 99.0,
+      "precision": 98.7,
+      "recall": 98.6,
+      "f1": 98.7,
+      "mcc": 0.986
+    },
+    {
+      "dataset": "noisy",
+      "model": "Transformer",
+      "accuracy": 68.8,
+      "precision": 65.2,
+      "recall": 68.2,
+      "f1": 66.0,
+      "mcc": 0.571
+    }
+  ],
+  "modelSize": [
+    {
+      "model": "Decision Tree",
+      "kb": 4.6
+    },
+    {
+      "model": "Random Forest",
+      "kb": 1053.2
+    },
+    {
+      "model": "Neural Network",
+      "kb": 37.2
+    },
+    {
+      "model": "XGBoost",
+      "kb": 393.7
+    },
+    {
+      "model": "Transformer",
+      "kb": 13.3
+    }
+  ],
+  "decisionTree": {
+    "leaf": false,
+    "feature": "Respiratory rate",
+    "threshold": 20.5,
+    "left": {
+      "leaf": false,
+      "feature": "Heart rate",
+      "threshold": 90.5,
+      "left": {
+        "leaf": false,
+        "feature": "Heart rate",
+        "threshold": 50.5,
+        "left": {
+          "leaf": false,
+          "feature": "Heart rate",
+          "threshold": 40.5,
+          "left": {
+            "leaf": true,
+            "prediction": "Critical",
+            "counts": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "totalSamples": 1
+          },
+          "right": {
+            "leaf": false,
+            "feature": "Respiratory rate",
+            "threshold": 8.5,
+            "left": {
+              "leaf": true,
+              "prediction": "Critical",
+              "counts": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "Warning",
+              "counts": [
+                0,
+                1,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            }
+          }
+        },
+        "right": {
+          "leaf": false,
+          "feature": "SpO2",
+          "threshold": 95.5,
+          "left": {
+            "leaf": false,
+            "feature": "SpO2",
+            "threshold": 93.5,
+            "left": {
+              "leaf": true,
+              "prediction": "Critical",
+              "counts": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "Warning",
+              "counts": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            }
+          },
+          "right": {
+            "leaf": false,
+            "feature": "Respiratory rate",
+            "threshold": 11.5,
+            "left": {
+              "leaf": true,
+              "prediction": "Warning",
+              "counts": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "Normal",
+              "counts": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            }
+          }
+        }
+      },
+      "right": {
+        "leaf": false,
+        "feature": "Heart rate",
+        "threshold": 110.5,
+        "left": {
+          "leaf": false,
+          "feature": "SpO2",
+          "threshold": 93.5,
+          "left": {
+            "leaf": false,
+            "feature": "SpO2",
+            "threshold": 79.5,
+            "left": {
+              "leaf": true,
+              "prediction": "Critical",
+              "counts": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "High",
+              "counts": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "totalSamples": 1
+            }
+          },
+          "right": {
+            "leaf": false,
+            "feature": "Respiratory rate",
+            "threshold": 8.5,
+            "left": {
+              "leaf": true,
+              "prediction": "Critical",
+              "counts": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "Warning",
+              "counts": [
+                0,
+                1,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            }
+          }
+        },
+        "right": {
+          "leaf": false,
+          "feature": "Heart rate",
+          "threshold": 136.0,
+          "left": {
+            "leaf": false,
+            "feature": "SpO2",
+            "threshold": 92.0,
+            "left": {
+              "leaf": true,
+              "prediction": "Critical",
+              "counts": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "High",
+              "counts": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "totalSamples": 1
+            }
+          },
+          "right": {
+            "leaf": true,
+            "prediction": "Critical",
+            "counts": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "totalSamples": 1
+          }
+        }
+      }
+    },
+    "right": {
+      "leaf": false,
+      "feature": "Respiratory rate",
+      "threshold": 24.5,
+      "left": {
+        "leaf": false,
+        "feature": "Heart rate",
+        "threshold": 40.5,
+        "left": {
+          "leaf": true,
+          "prediction": "Critical",
+          "counts": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "totalSamples": 1
+        },
+        "right": {
+          "leaf": false,
+          "feature": "SpO2",
+          "threshold": 91.5,
+          "left": {
+            "leaf": true,
+            "prediction": "Critical",
+            "counts": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "totalSamples": 1
+          },
+          "right": {
+            "leaf": false,
+            "feature": "Temperature",
+            "threshold": 35.0,
+            "left": {
+              "leaf": true,
+              "prediction": "Critical",
+              "counts": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "totalSamples": 1
+            },
+            "right": {
+              "leaf": true,
+              "prediction": "High",
+              "counts": [
+                0,
+                0,
+                0,
+                0
+              ],
+              "totalSamples": 1
+            }
+          }
+        }
+      },
+      "right": {
+        "leaf": true,
+        "prediction": "Critical",
+        "counts": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "totalSamples": 1
+      }
+    }
+  },
+  "histograms": {
+    "HR": {
+      "binEdges": [
+        39.0,
+        44.33,
+        49.67,
+        55.0,
+        60.33,
+        65.67,
+        71.0,
+        76.33,
+        81.67,
+        87.0,
+        92.33,
+        97.67,
+        103.0,
+        108.33,
+        113.67,
+        119.0
+      ],
+      "counts": {
+        "Normal": [
+          0,
+          0,
+          160,
+          467,
+          336,
+          410,
+          469,
+          335,
+          319,
+          161,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Warning": [
+          61,
+          101,
+          55,
+          27,
+          20,
+          31,
+          32,
+          19,
+          25,
+          97,
+          119,
+          98,
+          58,
+          18,
+          0
+        ],
+        "High": [
+          12,
+          23,
+          49,
+          116,
+          98,
+          139,
+          152,
+          144,
+          132,
+          124,
+          53,
+          52,
+          28,
+          43,
+          42
+        ],
+        "Critical": [
+          43,
+          8,
+          13,
+          42,
+          67,
+          121,
+          126,
+          96,
+          145,
+          130,
+          75,
+          61,
+          72,
+          43,
+          32
+        ]
+      }
+    },
+    "RR": {
+      "binEdges": [
+        10.0,
+        11.73,
+        13.47,
+        15.2,
+        16.93,
+        18.67,
+        20.4,
+        22.13,
+        23.87,
+        25.6,
+        27.33,
+        29.07,
+        30.8,
+        32.53,
+        34.27,
+        36.0
+      ],
+      "counts": {
+        "Normal": [
+          0,
+          147,
+          248,
+          313,
+          850,
+          1099,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Warning": [
+          96,
+          57,
+          61,
+          76,
+          189,
+          273,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "High": [
+          0,
+          4,
+          7,
+          15,
+          16,
+          49,
+          658,
+          181,
+          292,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "Critical": [
+          6,
+          6,
+          18,
+          16,
+          28,
+          42,
+          19,
+          1,
+          179,
+          309,
+          214,
+          97,
+          61,
+          44,
+          53
+        ]
+      }
+    },
+    "SpO2": {
+      "binEdges": [
+        90.0,
+        90.83,
+        91.67,
+        92.5,
+        93.33,
+        94.17,
+        95.0,
+        95.83,
+        96.67,
+        97.5,
+        98.33,
+        99.17,
+        100.0
+      ],
+      "counts": {
+        "Normal": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          152,
+          131,
+          1609,
+          300,
+          465
+        ],
+        "Warning": [
+          0,
+          0,
+          0,
+          0,
+          22,
+          0,
+          102,
+          65,
+          13,
+          404,
+          57,
+          98
+        ],
+        "High": [
+          0,
+          0,
+          49,
+          8,
+          18,
+          0,
+          63,
+          114,
+          51,
+          619,
+          133,
+          167
+        ],
+        "Critical": [
+          18,
+          13,
+          57,
+          10,
+          20,
+          0,
+          153,
+          79,
+          39,
+          473,
+          147,
+          106
+        ]
+      }
+    },
+    "Temperature_C": {
+      "binEdges": [
+        36.67,
+        36.72,
+        36.76,
+        36.81,
+        36.85,
+        36.9,
+        36.94,
+        36.99,
+        37.04,
+        37.08,
+        37.13,
+        37.17,
+        37.22
+      ],
+      "counts": {
+        "Normal": [
+          2020,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          627
+        ],
+        "Warning": [
+          644,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          114
+        ],
+        "High": [
+          936,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          279
+        ],
+        "Critical": [
+          875,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          259
+        ]
+      }
+    }
+  },
+  "rrBandingNote": "All four vitals (heart rate, respiratory rate, SpO2, temperature) are banded using the exact official NHS/Royal College of Physicians NEWS2 chart (Dec 2022 edition, SpO2 Scale 1) -- not an ad-hoc rule.",
+  "noiseModel": {
+    "HR": "+-5 bpm",
+    "RR": "+-2 breaths/min",
+    "SpO2": "+-2%",
+    "Temperature_C": "+-0.3C"
+  },
+  "transformerParamCount": 3412
+}
