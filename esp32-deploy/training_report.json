@@ -1,0 +1,55 @@
+{
+  "test_accuracy_pct": 99.78,
+  "confusion_matrix": [
+    [
+      2967,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      1806,
+      0,
+      0
+    ],
+    [
+      1,
+      5,
+      1102,
+      3
+    ],
+    [
+      0,
+      3,
+      2,
+      899
+    ]
+  ],
+  "classes": [
+    "Normal",
+    "Warning",
+    "High",
+    "Critical"
+  ],
+  "param_count": 3412,
+  "size_kb_float32": 13.33,
+  "rows_combined": 33944,
+  "rows_by_source": {
+    "CardiacPatientData_filtered.csv": 5808,
+    "NHAMCS_2021_CLEAN.csv": 14127,
+    "NHAMCS_2022_CLEAN.csv": 14009
+  },
+  "scaler_mean": [
+    88.841356351638,
+    19.54015437190667,
+    97.58561159556918,
+    36.80499479755489
+  ],
+  "scaler_scale": [
+    22.514389501391374,
+    5.0225723977054235,
+    2.9095242751821173,
+    0.5089196372984782
+  ]
+}
